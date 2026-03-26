@@ -3,10 +3,16 @@ const morgan = require("morgan");
 const UserRoute = require("./src/routes/UserRoute");
 const { client } = require("./src/database/db");
 const AuthRoute = require("./src/routes/AuthRoute");
+const bodyParser = require("body-parser");
 const app = express();
 require("dotenv").config();
 
 app.use(morgan("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(bodyParser.json());
 
 client
   .connect()

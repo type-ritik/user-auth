@@ -1,4 +1,5 @@
 const { createAccount } = require("../services/userServices");
+const validator = require("../utils/validator");
 
 const userCredentials = async (req, res) => {
   return res.send("Hello World");
@@ -6,13 +7,33 @@ const userCredentials = async (req, res) => {
 
 const signup = async (req, res) => {
   try {
-    const payload = await createAccount();
-    res.json({
-      message: "User Login Successful",
-      user: payload,
+    const { name, email, password } = req.body;
+
+    if (!validator.isEmail(email)) {
+      throw new Error("Invalid Email");
+    }
+
+    if (!validator.isAlpha(name)) {
+      throw new Error("Invalid Name");
+    }
+
+    if (!validator.isStrongPassword(password)) {
+      throw new Error("Please provide strong password in 8 characters");
+    }
+
+    const payload = await createAccount(name, email, password);
+
+    res.status(201).send({
+      success: true,
+      message: `User registered successfully`,
+      user: payload[0],
     });
   } catch (error) {
-    throw new Error("Server Error: ", error.message);
+    console.error(error); // Log the real error for you to see
+    res.status(500).send({
+      success: false,
+      message: error.message || "Internal Server Error",
+    });
   }
 };
 
