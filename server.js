@@ -1,7 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
-const { route } = require("./src/routes/UserRoute");
+const UserRoute = require("./src/routes/UserRoute");
 const { client } = require("./src/database/db");
+const AuthRoute = require("./src/routes/AuthRoute");
 const app = express();
 require("dotenv").config();
 
@@ -18,7 +19,8 @@ client
 
 const PORT = 8000;
 
-app.use("/api", route);
+app.use("/api", UserRoute);
+app.use("/auth", AuthRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port: ${PORT}`);
