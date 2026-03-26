@@ -3,6 +3,7 @@ const {
   isUserExistsByEmail,
   saveUserRecords,
 } = require("../repository/UserRepository");
+const { hashPassword } = require("../utils/passwordEncoder");
 
 const createAccount = async (name, email, password) => {
   try {
@@ -12,7 +13,9 @@ const createAccount = async (name, email, password) => {
       throw new Error("User with email already exists. Please try again!");
     }
 
-    const payload = await saveUserRecords(name, email, password);
+    const hashedPassword = hashPassword(password);
+
+    const payload = await saveUserRecords(name, email, hashedPassword);
 
     return payload;
   } catch (error) {
