@@ -17,6 +17,22 @@ const isUserExistsByEmail = async (email) => {
   }
 };
 
+const getUserByEmail = async (email) => {
+  try {
+    const res = await pool.query("SELECT * FROM users WHERE email = $1;", [
+      email,
+    ]);
+
+    if (res.rowCount === 0) {
+      throw new Error("User with email does not exist. Please try again!");
+    }
+
+    return res.rows;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 const saveUserRecords = async (name, email, password) => {
   try {
     const res = await pool.query(
@@ -37,4 +53,5 @@ const saveUserRecords = async (name, email, password) => {
 module.exports = {
   isUserExistsByEmail,
   saveUserRecords,
+  getUserByEmail,
 };

@@ -6,6 +6,7 @@ const AuthRoute = require("./src/routes/AuthRoute");
 const bodyParser = require("body-parser");
 const app = express();
 require("dotenv").config();
+const redisClient = require("./src/config/redis");
 
 app.use(morgan("dev"));
 app.use(express.json());
@@ -13,6 +14,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(bodyParser.json());
+
+redisClient
+  .connect()
+  .then(async () => {
+    console.log("Redis is connected successfully");
+  })
+  .catch(async (error) => {
+    console.log("Error", error);
+  });
 
 client
   .connect()
